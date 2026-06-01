@@ -111,8 +111,6 @@ Terraform is also **provider-agnostic**: the same workflow and language (HCL) ap
 
 ---
 
----
-
 ## 1c. Explain how Terraform manages multi-cloud, hybrid cloud, and service-agnostic workflows
 
 ### Concept
@@ -269,12 +267,6 @@ State serves three primary purposes:
 
 > **💡 Exam Q50 — Provider at `6.0.2`, constraint `~> 6.0.0`, run `terraform init -upgrade`, available `6.0.5` and `6.1.0`:**
 > `~> 6.0.0` = `>= 6.0.0, < 6.1.0` — only the patch can increment. `6.0.5` is within range ✅, `6.1.0` is blocked ❌. Result: upgrades to **`6.0.5`**. `.terraform.lock.hcl` is updated.
----
-
----
-
-<a id="section-3"></a>
-# SECTION 3 — Core Terraform Workflow (~19%)
 
 ---
 
@@ -655,20 +647,46 @@ variable "instance_type" {
 }
 ```
 
-### Variable Assignment — Precedence (Lowest to Highest)
+# Variable Assignment Precedence (Lowest to Highest)
 
-```
-default value in variable block
-  (lowest)
-Terraform Cloud workspace variables
-terraform.tfvars and *.auto.tfvars  (auto-loaded)
--var-file=custom.tfvars  (explicit CLI flag)
--var="key=value"  (CLI flag)
-TF_VAR_NAME environment variables
-  (highest)
+| Priority | Source | Notes |
+|----------|---------|-------|
+| 1 (Lowest) | **Default value in `variable` block** | Used only when no other value is provided. |
+| 2 | **Terraform Cloud Workspace Variables** | Variables defined in the Terraform Cloud workspace. |
+| 3 | **`terraform.tfvars` and `*.auto.tfvars`** | Automatically loaded by Terraform. |
+| 4 | **`-var-file=custom.tfvars`** | Explicitly loaded using the CLI flag. |
+| 5 | **`-var="key=value"`** | Explicit variable assignment from the command line. |
+| 6 (Highest) | **`TF_VAR_<NAME>` Environment Variables** | Highest precedence; overrides all other sources. |
+
+## Notes
+
+### Auto-Loaded Variable Files
+
+Terraform automatically loads:
+
+- `terraform.tfvars`
+- `terraform.tfvars.json`
+- `*.auto.tfvars`
+- `*.auto.tfvars.json`
+
+### Custom Variable Files
+
+Any other `.tfvars` file must be explicitly specified:
+
+```bash
+terraform plan -var-file="custom.tfvars"
 ```
 
-Auto-loaded files: terraform.tfvars and any file matching *.auto.tfvars are loaded automatically without CLI flags. Any other .tfvars file must be explicitly specified with -var-file.
+### Environment Variables
+
+Environment variables follow the format:
+
+```bash
+export TF_VAR_region="us-east-1"
+export TF_VAR_instance_type="t3.micro"
+```
+
+These variables have the **highest precedence** and override all other variable sources.
 
 ### Variable Types — Primitives
 
