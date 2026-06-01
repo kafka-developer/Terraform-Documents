@@ -206,9 +206,6 @@ provider "registry.terraform.io/hashicorp/aws" {
 - Commit it to version control — correct and recommended practice.
 - Running terraform init without -upgrade will NOT change provider versions already in the lock file, even if newer matching versions exist.
 
-
----
-
 ---
 
 ## 2c. Write Terraform configuration using multiple providers
@@ -373,8 +370,6 @@ Changing backend config + terraform init
 
 ---
 
----
-
 ## 3c. Validate a Terraform configuration
 
 ### Concept
@@ -400,8 +395,6 @@ terraform validate
 - validate catches typos in argument names, wrong types, missing required arguments.
 - It does NOT check if referenced cloud resources exist — that is plan.
 - Requires terraform init to have run first (needs provider schemas).
-
----
 
 ---
 
@@ -478,8 +471,6 @@ terraform apply -auto-approve # skip interactive approval (CI use)
 
 ---
 
----
-
 ## 3f. Destroy Terraform-managed infrastructure
 
 ### Concept
@@ -500,8 +491,6 @@ terraform plan -destroy         # preview what would be destroyed
 
 ---
 
----
-
 ## 3g. Apply formatting and style adjustments to a configuration
 
 ### Concept
@@ -519,8 +508,6 @@ terraform fmt -diff       # show diff without applying
 
 - fmt does NOT validate syntax or logic.
 - fmt -check returns exit code 0 if no changes needed, 1 if changes would be made. This is the CI-friendly mode.
-
----
 
 ---
 
@@ -587,9 +574,6 @@ resource "aws_instance" "web" {
 > Resource references do NOT use the `data.` prefix → `aws_instance.web.id`
 > This distinction is a frequent exam trap — one extra word changes everything.
 
-
----
-
 ---
 
 ## 4b. Refer to resource attributes and create cross-resource references
@@ -654,13 +638,6 @@ resource "aws_instance" "web" {
 > }
 > ```
 > The attribute reference creates an **implicit dependency** — no `depends_on` needed. Terraform creates the DB first because of the reference.
-
----
-
-<a id="section-3"></a>
-# SECTION 3 — Core Terraform Workflow (~19%)
-
----
 
 ---
 
@@ -747,9 +724,6 @@ resource "aws_instance" "web" {
 - sensitive = true hides value in CLI but does NOT protect it in the state file — still stored in plaintext.
 - for_each requires a map or set — passing a list causes an error. Use toset() to convert.
 - local values are referenced as local.name (singular), not locals.name.
-
-
----
 
 ---
 
@@ -1117,9 +1091,6 @@ toset(["x", "y"])
 > aws_instance.web.public_ip
 "54.1.2.3"
 ```
-
----
-
 ---
 
 ## 4f. Define resource dependencies in configuration
@@ -1225,8 +1196,6 @@ resource "aws_instance" "web" {
 
 ---
 
----
-
 > **💡 Exam Q51 — Tag management bot updates tags externally; ignore future tag changes:**
 > Use `ignore_changes = [tags]` in the lifecycle block:
 > ```hcl
@@ -1324,8 +1293,6 @@ check "health_check" {
 > }
 > ```
 > Key distinction: variable `validation` runs before plan and checks user input. `postcondition` runs after the data is fetched and checks what the cloud returned.
-
----
 
 ---
 
@@ -1435,8 +1402,6 @@ module "vpc" {
 
 ---
 
----
-
 ## 5b. Describe variable scope within modules
 
 ### Concept
@@ -1465,8 +1430,6 @@ resource "aws_instance" "app" {
   subnet_id = module.vpc.private_subnets[0]
 }
 ```
-
----
 
 ---
 
@@ -1519,8 +1482,6 @@ terraform-module/
 
 <a id="section-6"></a>
 # SECTION 6 — Terraform State Management (~11%)
-
----
 
 ---
 
@@ -1711,8 +1672,6 @@ terraform state pull                  # download remote state to stdout
 
 ---
 
----
-
 ### moved Block
 
 The moved block tells Terraform a resource has been renamed in configuration — without destroying and recreating it. Terraform updates the state reference to the new address.
@@ -1774,14 +1733,6 @@ removed {
 - terraform import adds to state — does NOT generate config.
 - After import, terraform plan should show no changes if your config correctly describes the resource.
 - moved blocks are for refactoring — renaming or moving resources between modules — without infrastructure disruption.
-
-
----
-
-<a id="section-7"></a>
-# SECTION 7 — Maintain Infrastructure with Terraform (~8%)
-
----
 
 ---
 
@@ -1895,22 +1846,11 @@ This forces Terraform to destroy and recreate the specified resource, even if th
 ---
 
 <a id="section-8"></a>
-
-<a id="section-8"></a>
-# SECTION 8 — HCP Terraform (~11%)
-
----
-
----
-
-<a id="section-8"></a>
 # SECTION 8 — HCP Terraform (~11%)
 
 ---
 
 ## 8a. Use HCP Terraform to create infrastructure
-
-### Concept
 
 ### Concept
 
@@ -2051,8 +1991,6 @@ A workspace can be manually locked to prevent runs while maintenance is in progr
 
 ---
 
----
-
 ## 8b. Describe HCP Terraform collaboration and governance features
 
 ---
@@ -2121,8 +2059,6 @@ The exam may ask: both Sentinel AND OPA are supported as policy engines in HCP T
 
 ---
 
----
-
 ### Private Module Registry
 
 ### Concept
@@ -2168,8 +2104,6 @@ The `app.terraform.io` hostname tells Terraform to fetch the module from HCP Ter
 - The naming convention for VCS repos is `terraform-<PROVIDER>-<MODULE_NAME>` — this triggers auto-publishing.
 - Modules from the private registry require `terraform login` to authenticate during `terraform init`.
 - The private registry hosts modules only — not providers.
-
----
 
 ---
 
@@ -2229,8 +2163,6 @@ Each team can be assigned a permission level for a specific workspace:
 
 ---
 
----
-
 ### Variable Sets and Sensitive Variables
 
 ### Variable Sets
@@ -2276,8 +2208,6 @@ This is how cloud provider credentials should be stored. Even admins cannot read
 - Terraform variables in HCP must match a declared variable block in the config — otherwise Terraform ignores them.
 - Environment variables are for credentials and process-level flags — not HCL input values.
 - Sensitive in HCP Terraform means unreadable after saving — this is stronger than `sensitive = true` in open-source Terraform (which just hides CLI output).
-
----
 
 ---
 
@@ -2342,8 +2272,6 @@ Organisation
 - A workspace belongs to **exactly one** project — it cannot be in multiple projects.
 - Project-level permissions are additive — a team with project access gets that access on top of any org-level access.
 - The default project always exists and cannot be deleted.
-
----
 
 ---
 
@@ -2428,15 +2356,6 @@ You typically use both together: run triggers ensure the downstream workspace re
 > ```
 > `prod-webserver` must declare the IP as an `output` block. Every time `prod-webserver` applies and the IP changes, `prod-dns` picks up the new value on its next plan/apply — no manual variable updates needed.
 > Use a **run trigger** alongside this so `prod-dns` automatically re-plans when `prod-webserver` applies.
-
----
-
-*Verify current objectives at:*
-*https://developer.hashicorp.com/terraform/tutorials/certification-004/associate-review-004*
-
----
-
----
 
 ---
 
