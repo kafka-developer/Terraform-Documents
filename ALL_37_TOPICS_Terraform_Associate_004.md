@@ -134,13 +134,6 @@ Terraform is **not** the right tool for:
 
 ---
 
----
-
-<a id="section-2"></a>
-# SECTION 2 — Terraform Fundamentals (~11%)
-
----
-
 ## 2a. Install and version Terraform providers
 
 ### Concept
@@ -1388,7 +1381,6 @@ The 004 exam specifically tests the distinction between these mechanisms:
 > ```
 > Ephemeral values are computed in memory at runtime and discarded — they never touch state.
 
----
 ---
 
 <a id="section-5"></a>
