@@ -1389,12 +1389,6 @@ The 004 exam specifically tests the distinction between these mechanisms:
 > Ephemeral values are computed in memory at runtime and discarded — they never touch state.
 
 ---
-
-<a id="section-5"></a>
-# SECTION 5 — Terraform Modules (~11%)
-
----
-
 ---
 
 <a id="section-5"></a>
