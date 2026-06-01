@@ -433,8 +433,6 @@ Saved plan files guarantee the applied changes match exactly what was reviewed â
 
 ---
 
----
-
 ## 3e. Apply changes to infrastructure with Terraform
 
 ### Concept
@@ -647,7 +645,7 @@ variable "instance_type" {
 }
 ```
 
-# Variable Assignment Precedence (Lowest to Highest)
+### Variable Assignment Precedence (Lowest to Highest)
 
 | Priority | Source | Notes |
 |----------|---------|-------|
@@ -658,7 +656,6 @@ variable "instance_type" {
 | 5 | **`-var="key=value"`** | Explicit variable assignment from the command line. |
 | 6 (Highest) | **`TF_VAR_<NAME>` Environment Variables** | Highest precedence; overrides all other sources. |
 
-## Notes
 
 ### Auto-Loaded Variable Files
 
